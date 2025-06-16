@@ -1,0 +1,34 @@
+/* Unsichtbar + deaktiviert */
+.navigation--meta .navigation__meta-list li:first-child,
+.navigation--meta .navigation__meta-list li:last-child,
+.breadcrumb__list,
+.link-teaser,
+.footer__social-media-menu,
+.bouncer#c102349,
+.cookiebanner {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+/* Nur pointer-events deaktivieren */
+.hub-centers,
+.plyr iframe,
+.textmedia a {
+  pointer-events: none !important;
+}
+
+/* Überschriften-Styling anpassen */
+.headline__heading {
+  padding: 0 !important;
+  border-left: none !important;
+}
+
+/* Footer-Abstand anpassen */
+.footer__bottom {
+  padding-bottom: 2rem !important;
+}
+
+/* Link-Dekoration entfernen */
+.textmedia a {
+  border-bottom: none !important;
+}
