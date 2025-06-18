@@ -14,7 +14,7 @@
 /* Nur pointer-events deaktivieren */
 .hub-centers,
 .plyr iframe,
-.textmedia a,
+.textmedia a:not('.btn'),
 .footer__logo {
   pointer-events: none !important;
 }
