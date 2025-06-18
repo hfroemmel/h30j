@@ -5,7 +5,7 @@
 .link-teaser,
 .footer__menu,
 .footer__social-media-menu,
-.bouncer#c102349,
+.bouncer,
 .cookiebanner {
   display: none !important;
   pointer-events: none !important;
