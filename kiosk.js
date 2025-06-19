@@ -81,6 +81,19 @@ document.addEventListener('DOMContentLoaded', function () {
     updateLinks(root);
   }
 
+  // Logo-Link ersetzen
+  const logoLink = document.querySelector('.header__logo a');
+  if (logoLink) {
+    logoLink.addEventListener('click', function (event) {
+      event.preventDefault();
+      const currentUrl = window.location.href;
+      const targetUrl = currentUrl.includes('/en/')
+        ? 'https://www.helmholtz.de/en/about-us/helmholtz-stories/?kiosk=true'
+        : 'https://www.helmholtz.de/ueber-uns/helmholtz-stories/?kiosk=true';
+      window.location.href = targetUrl;
+    });
+  }
+
   // Initiale Anwendung
   updatePageContent();
 

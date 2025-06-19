@@ -11,27 +11,29 @@
   pointer-events: none !important;
 }
 
-/* Nur pointer-events deaktivieren */
 .hub-centers,
 .hub-centers a,
 .plyr iframe,
-.textmedia a:not('.btn'),
+.textmedia a:not(.btn),
 .footer__logo {
   pointer-events: none !important;
 }
 
-/* Überschriften-Styling anpassen */
+.textmedia a:not(.btn) {
+  border-bottom: none !important;
+}
+
+.hub-centers a,
+.textmedia a:not(.btn):hover {
+  cursor: text !important;
+  color: var(--ci-text-color) !important;
+}
+
 .headline__heading {
   padding: 0 !important;
   border-left: none !important;
 }
 
-/* Footer-Abstand anpassen */
 .footer__bottom {
   padding-bottom: 2rem !important;
-}
-
-/* Link-Dekoration entfernen */
-.textmedia a {
-  border-bottom: none !important;
 }
