@@ -1,78 +1,65 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
 
   function updateYouTubeIframes(root = document) {
-    const iframes = root.querySelectorAll('iframe');
-
-    iframes.forEach(iframe => {
+    root.querySelectorAll('iframe').forEach(iframe => {
       const src = iframe.getAttribute('src');
+      if (!src || !src.includes('youtube.com')) return;
 
-      if (src && src.includes('youtube.com')) {
-        try {
-          const url = new URL(src);
-          url.searchParams.set('cc_load_policy', '1');
+      try {
+        const url = new URL(src);
+        url.searchParams.set('cc_load_policy', '1');
 
-          const currentUrl = window.location.href;
-          const lang = currentUrl.includes('/en/') ? 'en' : 'de';
-          url.searchParams.set('cc_lang_pref', lang);
+        const lang = window.location.href.includes('/en/') ? 'en' : 'de';
+        url.searchParams.set('cc_lang_pref', lang);
 
-          const newSrc = url.toString();
-          if (src !== newSrc) {
-            iframe.setAttribute('src', newSrc);
-          }
-        } catch (e) {
-          console.warn('Ungültige YouTube-URL:', src);
+        const newSrc = url.toString();
+        if (src !== newSrc) {
+          iframe.setAttribute('src', newSrc);
         }
+      } catch (e) {
+        console.warn('Ungültige YouTube-URL:', src);
       }
     });
   }
 
   function updateLinks(root = document) {
-    const links = root.querySelectorAll('a[href]');
+    root.querySelectorAll('a[href]').forEach(link => {
+      const href = link.getAttribute('href');
 
-    links.forEach(link => {
       try {
-        const href = link.getAttribute('href');
         const url = new URL(href, document.baseURI);
 
         if (!url.searchParams.has('kiosk')) {
           url.searchParams.set('kiosk', 'true');
           link.setAttribute('href', url.toString());
         }
+
+        if (!link.dataset.kioskHandled) {
+          link.addEventListener('click', event => {
+            try {
+              const targetUrl = new URL(link.getAttribute('href'), document.baseURI);
+
+              if (!targetUrl.searchParams.has('kiosk')) {
+                event.preventDefault();
+                targetUrl.searchParams.set('kiosk', 'true');
+                window.location.href = targetUrl.toString();
+              }
+            } catch (e) {
+              console.warn('Ungültige URL im Link:', href);
+            }
+          });
+
+          link.dataset.kioskHandled = 'true';
+        }
+
       } catch (e) {
         // Ignoriere ungültige URLs
       }
-
-      // Verhindere doppelte Event Listener
-      if (!link.dataset.kioskHandled) {
-        link.addEventListener('click', function (event) {
-          const originalHref = link.getAttribute('href');
-
-          try {
-            const url = new URL(originalHref, document.baseURI);
-
-            if (!url.searchParams.has('kiosk')) {
-              event.preventDefault(); // Standardverhalten abbrechen
-
-              url.searchParams.set('kiosk', 'true');
-
-              // Benutzer weiterleiten mit aktualisierter URL
-              window.location.href = url.toString();
-            }
-            // Wenn "kiosk" bereits da ist, Browser führt Navigation aus
-          } catch (e) {
-            console.warn('Ungültige URL im Link:', originalHref);
-          }
-        });
-
-        // Markiere Link als verarbeitet
-        link.dataset.kioskHandled = 'true';
-      }
     });
 
-    // Blockiere Klicks auf bestimmte Links
-    const forbiddenLinks = root.querySelectorAll('.textmedia a, .hub-centers a');
-    forbiddenLinks.forEach(link => {
-      link.addEventListener('click', event => event.preventDefault(), { once: true });
+    // Bestimmte Links deaktivieren
+    root.querySelectorAll('.textmedia a, .hub-centers a').forEach(link => {
+      link.addEventListener('click', e => e.preventDefault(), { once: true });
     });
   }
 
@@ -81,35 +68,36 @@ document.addEventListener('DOMContentLoaded', function () {
     updateLinks(root);
   }
 
-  // Logo-Link ersetzen
-  const logoLink = document.querySelector('.header__logo a');
-  if (logoLink) {
-    logoLink.addEventListener('click', function (event) {
-      event.preventDefault();
-      const currentUrl = window.location.href;
-      const targetUrl = currentUrl.includes('/en/')
-        ? 'https://www.helmholtz.de/en/about-us/helmholtz-stories/?kiosk=true'
-        : 'https://www.helmholtz.de/ueber-uns/helmholtz-stories/?kiosk=true';
-      window.location.href = targetUrl;
+  function updateLogoLinks() {
+    const isEnglish = window.location.href.includes('/en/');
+    const urlDe = 'https://www.helmholtz.de/ueber-uns/helmholtz-stories/?kiosk=true';
+    const urlEn = 'https://www.helmholtz.de/en/about-us/helmholtz-stories/?kiosk=true';
+    const newUrl = isEnglish ? urlEn : urlDe;
+
+    const logoLinks = [
+      document.querySelector('.header__logo a'),
+      document.querySelector('.footer__logo')
+    ];
+
+    logoLinks.forEach(link => {
+      if (link) {
+        link.setAttribute('href', newUrl);
+      }
     });
   }
 
-  // Initiale Anwendung
+  // Initial ausführen
+  updateLogoLinks();
   updatePageContent();
 
-  // Beobachte DOM-Veränderungen (z.B. durch Lazy Loading)
-  const observer = new MutationObserver(mutations => {
+  // DOM-Änderungen beobachten (z. B. Lazy Loading)
+  new MutationObserver(mutations => {
     mutations.forEach(mutation => {
       mutation.addedNodes.forEach(node => {
-        if (node.nodeType === 1) {
+        if (node.nodeType === Node.ELEMENT_NODE) {
           updatePageContent(node);
         }
       });
     });
-  });
-
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true
-  });
+  }).observe(document.body, { childList: true, subtree: true });
 });

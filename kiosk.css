@@ -6,7 +6,8 @@
 .footer__menu,
 .footer__social-media-menu,
 .bouncer,
-.cookiebanner {
+.cookiebanner,
+.hub-centers-link.btn {
   display: none !important;
   pointer-events: none !important;
 }
