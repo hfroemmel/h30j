@@ -56,16 +56,35 @@ document.addEventListener('DOMContentLoaded', () => {
         // Ignoriere ungültige URLs
       }
     });
+  }
 
-    // Bestimmte Links deaktivieren
-    root.querySelectorAll('.textmedia a, .hub-centers a').forEach(link => {
-      link.addEventListener('click', e => e.preventDefault(), { once: true });
+  function makeRelatedContentItemsClickable(root = document) {
+    const items = root.querySelectorAll('.related-content__item');
+
+    items.forEach(item => {
+      // Skip, wenn bereits behandelt
+      if (item.dataset.clickHandled) return;
+
+      const link = item.querySelector('a[href]');
+      if (link) {
+        const href = link.getAttribute('href');
+        item.style.cursor = 'pointer';
+
+        item.addEventListener('click', event => {
+          // Verhindere doppelte Navigation, wenn direkt auf den Link geklickt wird
+          if (event.target.closest('a')) return;
+          window.location.href = href;
+        });
+
+        item.dataset.clickHandled = 'true';
+      }
     });
   }
 
   function updatePageContent(root = document) {
     updateYouTubeIframes(root);
     updateLinks(root);
+    makeRelatedContentItemsClickable(root);
   }
 
   function updateLogoLinks() {
