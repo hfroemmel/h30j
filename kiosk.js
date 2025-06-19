@@ -88,8 +88,8 @@ document.addEventListener('DOMContentLoaded', function () {
       event.preventDefault();
       const currentUrl = window.location.href;
       const targetUrl = currentUrl.includes('/en/')
-        ? '/en/about-us/helmholtz-stories/'
-        : '/ueber-uns/helmholtz-stories/';
+        ? '/en/about-us/helmholtz-stories/?kiosk=true'
+        : '/ueber-uns/helmholtz-stories/?kiosk=true';
       window.location.href = targetUrl;
     });
   }

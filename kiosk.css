@@ -13,6 +13,7 @@
 
 /* Nur pointer-events deaktivieren */
 .hub-centers,
+.hub-centers a,
 .plyr iframe,
 .textmedia a:not('.btn'),
 .footer__logo {
