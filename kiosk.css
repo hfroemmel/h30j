@@ -35,6 +35,14 @@
   border-left: none !important;
 }
 
+.footer {
+  margin-top: 14.3rem !important;
+}
+
 .footer__bottom {
   padding-bottom: 2rem !important;
+}
+
+.footer__copyright {
+  margin-left: 0 !important;
 }
