@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const url = new URL(href, document.baseURI);
 
         if (!url.searchParams.has('kiosk')) {
-          url.searchParams.set('kiosk', '1');
+          url.searchParams.set('kiosk', 'true');
           link.setAttribute('href', url.toString());
         }
       } catch (e) {
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!url.searchParams.has('kiosk')) {
               event.preventDefault(); // Standardverhalten abbrechen
 
-              url.searchParams.set('kiosk', '1');
+              url.searchParams.set('kiosk', 'true');
 
               // Benutzer weiterleiten mit aktualisierter URL
               window.location.href = url.toString();
