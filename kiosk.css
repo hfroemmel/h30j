@@ -12,6 +12,15 @@
   pointer-events: none !important;
 }
 
+.plyr__video {
+  overflow: visible !important;
+}
+
+.plyr__controls {
+  bottom: -41px !important;
+  transition: opacatiy 0.33s !important;
+}
+
 .hub-centers,
 .hub-centers a,
 .plyr iframe,
