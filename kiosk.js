@@ -1,31 +1,39 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-  function adjustYouTubeEmbeds(root = document) {
-    const iframes = root.querySelectorAll('iframe');
-    console.log('iframes');
-    console.log(iframes);
+  document.body.addEventListener('click', function (e) {
+    const playButton = e.target.closest('button[data-plyr="play"]');
+    if (!playButton) return;
 
-    iframes.forEach(iframe => {
-      // Parse existing src
-      const srcUrl = new URL(iframe.src, window.location.origin);
-      
-      // Set or update parameters
-      const params = srcUrl.searchParams;
-      params.set('modestbranding', '1'); // Minimal branding
-      params.set('controls', '0');       // Hide basic controls
-      params.set('rel', '0');            // No related videos
-      params.set('showinfo', '0');       // Hide title and uploader
-      params.set('cc_load_policy', '1'); // Force subtitles if available
+    // Elterncontainer finden
+    const videoWrapper = playButton.closest('.video__video-wrapper-inner');
+    if (!videoWrapper) return;
 
-      // Update the src
-      iframe.src = srcUrl.origin + srcUrl.pathname + '?' + params.toString();
-      console.log('srcUrl', srcUrl);
-      console.log('newUrl', srcUrl.origin + srcUrl.pathname + '?' + params.toString());
+    // iframe finden
+    const iframe = videoWrapper.querySelector('iframe[src*="youtube.com/embed"]');
+    if (!iframe) return;
 
-      // Remove fullscreen capability
-      iframe.removeAttribute('allowfullscreen');
-    });
-  }
+    // Nur einmal anpassen
+    if (iframe.dataset.patched === "true") return;
+
+    const srcUrl = new URL(iframe.src, window.location.origin);
+    const params = srcUrl.searchParams;
+
+    // Parameter setzen
+    params.set('modestbranding', '1');
+    params.set('controls', '0');
+    params.set('rel', '0');
+    params.set('showinfo', '0');
+    params.set('cc_load_policy', '1');
+
+    // Neue src setzen
+    iframe.src = srcUrl.origin + srcUrl.pathname + '?' + params.toString();
+
+    // Fullscreen deaktivieren
+    iframe.removeAttribute('allowfullscreen');
+
+    // Markieren, dass das iframe bereits gepatcht wurde
+    iframe.dataset.patched = "true";
+  });
 
   function removeCHashFromLinks() {
     const links = document.querySelectorAll('a.btn--language');
@@ -97,7 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updatePageContent(root = document) {
-    adjustYouTubeEmbeds(root);
     updateLinks(root);
     makeRelatedContentItemsClickable(root);
   }
