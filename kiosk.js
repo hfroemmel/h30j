@@ -1,24 +1,35 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-  function updateYouTubeIframes(root = document) {
-    root.querySelectorAll('iframe').forEach(iframe => {
-      const src = iframe.getAttribute('src');
-      if (!src || !src.includes('youtube.com')) return;
+  function adjustYouTubeEmbeds(root = document) {
+    const iframes = root.querySelectorAll('iframe[src*="youtube.com/embed"]');
 
-      try {
-        const url = new URL(src);
-        url.searchParams.set('cc_load_policy', '1');
+    iframes.forEach(iframe => {
+      // Parse existing src
+      const srcUrl = new URL(iframe.src, window.location.origin);
+      
+      // Set or update parameters
+      const params = srcUrl.searchParams;
+      params.set('modestbranding', '1'); // Minimal branding
+      params.set('controls', '1');       // Show basic controls
+      params.set('rel', '0');            // No related videos
+      params.set('showinfo', '0');       // Hide title and uploader
+      params.set('cc_load_policy', '1'); // Force subtitles if available
 
-        const lang = window.location.href.includes('/en/') ? 'en' : 'de';
-        url.searchParams.set('cc_lang_pref', lang);
+      // Update the src
+      iframe.src = srcUrl.origin + srcUrl.pathname + '?' + params.toString();
 
-        const newSrc = url.toString();
-        if (src !== newSrc) {
-          iframe.setAttribute('src', newSrc);
-        }
-      } catch (e) {
-        console.warn('Ungültige YouTube-URL:', src);
-      }
+      // Remove fullscreen capability
+      iframe.removeAttribute('allowfullscreen');
+    });
+  }
+
+  function removeCHashFromLinks() {
+    const links = document.querySelectorAll('a.btn--language');
+
+    links.forEach(link => {
+      const url = new URL(link.href, window.location.origin);
+      url.searchParams.delete('cHash');
+      link.href = url.pathname + url.search;
     });
   }
 
@@ -82,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updatePageContent(root = document) {
-    updateYouTubeIframes(root);
+    adjustYouTubeEmbeds(root);
     updateLinks(root);
     makeRelatedContentItemsClickable(root);
   }
@@ -108,6 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial ausführen
   updateLogoLinks();
   updatePageContent();
+  removeCHashFromLinks();
 
   // DOM-Änderungen beobachten (z. B. Lazy Loading)
   new MutationObserver(mutations => {
