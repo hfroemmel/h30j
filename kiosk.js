@@ -1,39 +1,37 @@
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('v2');
+  
+  setTimeout(() => {
+    const iframes = document.querySelectorAll('iframe[src*="youtube.com/embed"]');
 
-  document.body.addEventListener('click', function (e) {
-    const playButton = e.target.closest('button[data-plyr="play"]');
-    if (!playButton) return;
+    iframes.forEach(iframe => {
+      // Nur einmal anpassen
+      if (iframe.dataset.patched === "true") return;
 
-    // Elterncontainer finden
-    const videoWrapper = playButton.closest('.video__video-wrapper-inner');
-    if (!videoWrapper) return;
+      try {
+        const srcUrl = new URL(iframe.src, window.location.origin);
+        const params = srcUrl.searchParams;
 
-    // iframe finden
-    const iframe = videoWrapper.querySelector('iframe[src*="youtube.com/embed"]');
-    if (!iframe) return;
+        // Parameter setzen
+        params.set('modestbranding', '1');
+        params.set('controls', '0');
+        params.set('rel', '0');
+        params.set('showinfo', '0');
+        params.set('cc_load_policy', '1'); // Untertitel aktivieren
 
-    // Nur einmal anpassen
-    if (iframe.dataset.patched === "true") return;
+        // src aktualisieren
+        iframe.src = srcUrl.origin + srcUrl.pathname + '?' + params.toString();
 
-    const srcUrl = new URL(iframe.src, window.location.origin);
-    const params = srcUrl.searchParams;
+        // Fullscreen deaktivieren
+        iframe.removeAttribute('allowfullscreen');
 
-    // Parameter setzen
-    params.set('modestbranding', '1');
-    params.set('controls', '0');
-    params.set('rel', '0');
-    params.set('showinfo', '0');
-    params.set('cc_load_policy', '1');
-
-    // Neue src setzen
-    iframe.src = srcUrl.origin + srcUrl.pathname + '?' + params.toString();
-
-    // Fullscreen deaktivieren
-    iframe.removeAttribute('allowfullscreen');
-
-    // Markieren, dass das iframe bereits gepatcht wurde
-    iframe.dataset.patched = "true";
-  });
+        // Markieren als angepasst
+        iframe.dataset.patched = "true";
+      } catch (e) {
+        console.warn('Fehler beim Anpassen eines YouTube-Embeds:', e);
+      }
+    });
+  }, 3000); // 3 Sekunden warten
 
   function removeCHashFromLinks() {
     const links = document.querySelectorAll('a.btn--language');
