@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   function adjustYouTubeEmbeds(root = document) {
-    const iframes = root.querySelectorAll('iframe[src*="youtube.com/embed"]');
+    const iframes = root.querySelectorAll('iframe');
 
     iframes.forEach(iframe => {
       // Parse existing src
@@ -10,13 +10,15 @@ document.addEventListener('DOMContentLoaded', () => {
       // Set or update parameters
       const params = srcUrl.searchParams;
       params.set('modestbranding', '1'); // Minimal branding
-      params.set('controls', '1');       // Show basic controls
+      params.set('controls', '0');       // Hide basic controls
       params.set('rel', '0');            // No related videos
       params.set('showinfo', '0');       // Hide title and uploader
       params.set('cc_load_policy', '1'); // Force subtitles if available
 
       // Update the src
       iframe.src = srcUrl.origin + srcUrl.pathname + '?' + params.toString();
+      console.log('srcUrl', srcUrl);
+      console.log('newUrl', srcUrl.origin + srcUrl.pathname + '?' + params.toString());
 
       // Remove fullscreen capability
       iframe.removeAttribute('allowfullscreen');
