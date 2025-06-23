@@ -21,6 +21,10 @@
   transition: opacatiy 0.33s !important;
 }
 
+button[data-plyr="fullscreen"] {
+  display: none !important;
+}
+
 .hub-centers,
 .hub-centers a,
 .plyr iframe,

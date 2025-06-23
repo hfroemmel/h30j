@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('v3');
+  console.log('v4');
 
   setTimeout(() => {
     const iframes = document.querySelectorAll('iframe[src*="youtube.com/embed"]');
