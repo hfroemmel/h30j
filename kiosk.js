@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   console.log('v2');
-  
+
   setTimeout(() => {
     const iframes = document.querySelectorAll('iframe[src*="youtube.com/embed"]');
 
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.warn('Fehler beim Anpassen eines YouTube-Embeds:', e);
       }
     });
-  }, 3000); // 3 Sekunden warten
+  }, 1000); // 1 Sekunde warten
 
   function removeCHashFromLinks() {
     const links = document.querySelectorAll('a.btn--language');
