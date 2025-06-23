@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function adjustYouTubeEmbeds(root = document) {
     const iframes = root.querySelectorAll('iframe');
+    console.log('iframes');
+    console.log(iframes);
 
     iframes.forEach(iframe => {
       // Parse existing src
