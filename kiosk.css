@@ -21,7 +21,8 @@
   transition: opacatiy 0.33s !important;
 }
 
-button[data-plyr="fullscreen"] {
+button[data-plyr="fullscreen"],
+.plyr__volume {
   display: none !important;
 }
 
