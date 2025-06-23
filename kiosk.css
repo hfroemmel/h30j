@@ -12,7 +12,7 @@
   pointer-events: none !important;
 }
 
-.plyr__video {
+.plyr--video {
   overflow: visible !important;
 }
 
